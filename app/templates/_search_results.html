@@ -1,0 +1,9 @@
+{% if query and not results %}
+    <p class="empty-state">No items found for "{{ query }}".</p>
+{% elif results %}
+    <ul class="search-results-list">
+        {% for result in results %}
+            <li><a href="{{ url_for('items.detail', game_id=result.id) }}">{{ result.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}

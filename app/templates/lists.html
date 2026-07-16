@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}My Lists - CraftXIV{% endblock %}
+
+{% block content %}
+    <h1>My Lists</h1>
+
+    <form method="post" action="{{ url_for('lists.collection') }}" class="inline-form">
+        <input type="text" name="name" placeholder="New list name" required>
+        <button type="submit">Create list</button>
+    </form>
+
+    {% if lists %}
+        <ul class="lists-index">
+            {% for crafting_list in lists %}
+                <li>
+                    <a href="{{ url_for('lists.detail', list_id=crafting_list.id) }}">{{ crafting_list.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty-state">You don't have any crafting lists yet.</p>
+    {% endif %}
+{% endblock %}

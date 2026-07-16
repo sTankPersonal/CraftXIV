@@ -1,21 +1,37 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import pytest
 
 from app.config import TestConfig
-from app.datasources.base import DataSource
+from app.datasources.base import ItemDataSource
+from app.datasources.ingredient_ref import IngredientRef
+from app.datasources.parsed_item import ParsedItem
+from app.datasources.search_result import SearchResult
 from app.extensions import db
 from app.factory import AppFactory
+from app.models.acquisition_type import AcquisitionType
 
 
-class FakeDataSource(DataSource):
-    """Records calls so tests can assert whether the origin was hit."""
+class FakeItemDataSource(ItemDataSource):
+    """Serves ParsedItem fixtures from memory and records which ids were fetched,
+    so tests can assert whether the origin was actually hit."""
 
-    def __init__(self, payload: dict | None = None) -> None:
-        self.payload = payload or {"value": "from-origin"}
-        self.call_count = 0
+    def __init__(self, items: dict[int, ParsedItem]) -> None:
+        self._items = items
+        self.fetch_calls: list[int] = []
 
-    def fetch(self, key: str) -> dict:
-        self.call_count += 1
-        return dict(self.payload)
+    def fetch_item(self, game_id: int) -> ParsedItem:
+        self.fetch_calls.append(game_id)
+        return self._items[game_id]
+
+    def search(self, text: str) -> list[SearchResult]:
+        return [
+            SearchResult(game_id=item.game_id, name=item.name)
+            for item in self._items.values()
+            if text.lower() in item.name.lower()
+        ]
 
 
 @pytest.fixture
@@ -36,4 +52,38 @@ def client(app):
 
 @pytest.fixture
 def fake_data_source():
-    return FakeDataSource()
+    """A small crafting tree: item 1 (craft) needs 3x item 2 (gather) + 1x item 3 (vendor)."""
+    return FakeItemDataSource(
+        {
+            1: ParsedItem(
+                game_id=1,
+                name="Widget",
+                icon_id=None,
+                ilvl=1,
+                category=1,
+                acquisition_type=AcquisitionType.CRAFT,
+                ingredients=[
+                    IngredientRef(game_id=2, amount=3),
+                    IngredientRef(game_id=3, amount=1),
+                ],
+            ),
+            2: ParsedItem(
+                game_id=2,
+                name="Ore",
+                icon_id=None,
+                ilvl=1,
+                category=1,
+                acquisition_type=AcquisitionType.GATHER,
+                gathering_node_ids=[100],
+            ),
+            3: ParsedItem(
+                game_id=3,
+                name="Bolt",
+                icon_id=None,
+                ilvl=1,
+                category=1,
+                acquisition_type=AcquisitionType.VENDOR,
+                vendor_price=50,
+            ),
+        }
+    )

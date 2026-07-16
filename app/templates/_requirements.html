@@ -1,0 +1,18 @@
+{% if requirements %}
+    <table class="requirements-table">
+        <thead>
+            <tr><th>Item</th><th>Type</th><th>Quantity</th></tr>
+        </thead>
+        <tbody>
+            {% for req in requirements %}
+                <tr>
+                    <td><a href="{{ url_for('items.detail', game_id=req.id) }}">{{ req.name }}</a></td>
+                    <td>{{ req.acquisition_type }}</td>
+                    <td>{{ req.quantity }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="empty-state">No raw materials required.</p>
+{% endif %}

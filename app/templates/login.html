@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Log in - CraftXIV{% endblock %}
+
+{% block content %}
+    <h1>Log in</h1>
+    <ul class="provider-list">
+        {% for provider in providers %}
+            <li>
+                <a class="provider-button" href="{{ url_for('auth.login', provider=provider) }}">
+                    Continue with {{ provider|capitalize }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}CraftXIV{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <nav class="site-nav">
+            <a class="brand" href="{{ url_for('home.index') }}">CraftXIV</a>
+            <div class="nav-links">
+                <a href="{{ url_for('home.index') }}">Search</a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('lists.collection') }}">My Lists</a>
+                    <span class="nav-user">{{ current_user.display_name }}</span>
+                    <form method="post" action="{{ url_for('auth.logout') }}" class="inline-form">
+                        <button type="submit" class="link-button">Log out</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('auth.login_page') }}">Log in</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="site-main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        <li class="flash flash-{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

@@ -1,7 +1,7 @@
 from flask import Flask
 
 from app.config import Config
-from app.extensions import db, migrate
+from app.extensions import db, login_manager, migrate
 
 
 class AppFactory:
@@ -23,7 +23,28 @@ class AppFactory:
         db.init_app(app)
         migrate.init_app(app, db)
 
-    def _register_blueprints(self, app: Flask) -> None:
-        from app.api.routes import ApiBlueprint
+        login_manager.init_app(app)
+        login_manager.login_view = "auth.login_page"
+        self._register_user_loader()
 
-        app.register_blueprint(ApiBlueprint().blueprint)
+        from app.auth.oauth_registry import oauth_registry
+
+        oauth_registry.init_app(app)
+
+    def _register_user_loader(self) -> None:
+        from app.repositories.user_repository import UserRepository
+
+        login_manager.user_loader(UserRepository().get_by_id)
+
+    def _register_blueprints(self, app: Flask) -> None:
+        from app.api.health_routes import HealthBlueprint
+        from app.auth.routes import AuthBlueprint
+        from app.web.home_routes import HomeBlueprint
+        from app.web.item_routes import ItemBlueprint
+        from app.web.list_routes import ListBlueprint
+
+        app.register_blueprint(HealthBlueprint().blueprint)
+        app.register_blueprint(AuthBlueprint().blueprint)
+        app.register_blueprint(HomeBlueprint().blueprint)
+        app.register_blueprint(ItemBlueprint().blueprint)
+        app.register_blueprint(ListBlueprint().blueprint)

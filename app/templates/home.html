@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Search Items - CraftXIV{% endblock %}
+
+{% block content %}
+    <h1>Find an item</h1>
+    <input
+        type="search"
+        name="q"
+        placeholder="Search for an item..."
+        autofocus
+        hx-get="{{ url_for('home.item_search') }}"
+        hx-trigger="keyup changed delay:300ms, search"
+        hx-target="#search-results"
+        hx-swap="innerHTML"
+    >
+    <div id="search-results"></div>
+{% endblock %}

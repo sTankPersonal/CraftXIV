@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ crafting_list.name }} - CraftXIV{% endblock %}
+
+{% block content %}
+    <h1>{{ crafting_list.name }}</h1>
+
+    <form method="post" action="{{ url_for('lists.rename', list_id=crafting_list.id) }}" class="inline-form">
+        <input type="text" name="name" value="{{ crafting_list.name }}" required>
+        <button type="submit">Rename</button>
+    </form>
+
+    <form method="post" action="{{ url_for('lists.delete', list_id=crafting_list.id) }}"
+          class="inline-form" onsubmit="return confirm('Delete this list?');">
+        <button type="submit" class="danger">Delete list</button>
+    </form>
+
+    <section class="list-items">
+        <h2>Items</h2>
+        {% if items %}
+            <table class="items-table">
+                <thead>
+                    <tr><th>Item</th><th>Quantity</th><th></th></tr>
+                </thead>
+                <tbody>
+                    {% for list_item in items %}
+                        <tr>
+                            <td><a href="{{ url_for('items.detail', game_id=list_item.item.id) }}">{{ list_item.item.name }}</a></td>
+                            <td>
+                                <form method="post"
+                                      action="{{ url_for('lists.item_update', list_id=crafting_list.id, list_item_id=list_item.id) }}"
+                                      class="inline-form">
+                                    <input type="number" name="quantity" value="{{ list_item.quantity }}" min="1" required>
+                                    <button type="submit">Update</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="post"
+                                      action="{{ url_for('lists.item_delete', list_id=crafting_list.id, list_item_id=list_item.id) }}"
+                                      class="inline-form">
+                                    <button type="submit" class="danger">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="empty-state">No items yet. <a href="{{ url_for('home.index') }}">Search for items</a> to add.</p>
+        {% endif %}
+    </section>
+
+    <section class="list-requirements">
+        <h2>Total raw materials</h2>
+        {% include "_requirements.html" %}
+    </section>
+{% endblock %}
