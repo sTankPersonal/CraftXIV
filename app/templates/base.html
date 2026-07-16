@@ -4,15 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}CraftXIV{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
 </head>
 <body>
     <header class="site-header">
         <nav class="site-nav">
-            <a class="brand" href="{{ url_for('home.index') }}">CraftXIV</a>
+            <a class="brand" href="{{ url_for('home.index') }}"><span class="brand-mark">⌘</span>CraftXIV</a>
+
+            {% if current_user.is_authenticated %}
+                <form class="nav-search" method="get" action="{{ url_for('home.index') }}">
+                    <input type="search" name="q" placeholder="Search for an item..." autocomplete="off">
+                    <button type="submit">Search</button>
+                </form>
+            {% endif %}
+
             <div class="nav-links">
-                <a href="{{ url_for('home.index') }}">Search</a>
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('lists.collection') }}">My Lists</a>
                     <span class="nav-user">{{ current_user.display_name }}</span>
@@ -20,7 +33,7 @@
                         <button type="submit" class="link-button">Log out</button>
                     </form>
                 {% else %}
-                    <a href="{{ url_for('auth.login_page') }}">Log in</a>
+                    <a href="{{ url_for('auth.login_page') }}" class="nav-cta">Log in</a>
                 {% endif %}
             </div>
         </nav>
@@ -39,5 +52,9 @@
 
         {% block content %}{% endblock %}
     </main>
+
+    <footer class="site-footer">
+        <p>CraftXIV &middot; a crafting companion</p>
+    </footer>
 </body>
 </html>

@@ -4,58 +4,76 @@
 {% block title %}{{ item.name }} - CraftXIV{% endblock %}
 
 {% block content %}
-    <h1>{{ item.name }}</h1>
+    <div class="page-heading-row">
+        <h1>{{ item.name }}</h1>
+        <details class="popover-toggle">
+            <summary class="btn-outline" title="Actions">&#9776;</summary>
+            <div class="popover-panel">
+                {% if user_lists %}
+                    <form method="post" action="{{ url_for('items.add_to_list', game_id=item.id) }}" class="inline-form">
+                        <select name="list_id" required>
+                            {% for crafting_list in user_lists %}
+                                <option value="{{ crafting_list.id }}">{{ crafting_list.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="number" name="quantity" value="1" min="1" required>
+                        <button type="submit">Add to list</button>
+                    </form>
+                {% else %}
+                    <p>You don't have any lists yet. <a href="{{ url_for('lists.collection') }}">Create one</a>.</p>
+                {% endif %}
+                <button type="button" class="btn-outline popover-cancel" onclick="this.closest('details').removeAttribute('open')">Cancel</button>
+            </div>
+        </details>
+    </div>
+
+    <h2>Metadata</h2>
     <dl class="item-meta">
         <dt>Type</dt><dd>{{ item.acquisition_type }}</dd>
         {% if item.ilvl %}<dt>Item level</dt><dd>{{ item.ilvl }}</dd>{% endif %}
         {% if item.vendor_price %}<dt>Vendor price</dt><dd>{{ item.vendor_price }} gil</dd>{% endif %}
     </dl>
 
-    {% if current_user.is_authenticated %}
-        <section class="add-to-list">
-            <h2>Add to a list</h2>
-            {% if user_lists %}
-                <form method="post" action="{{ url_for('items.add_to_list', game_id=item.id) }}" class="inline-form">
-                    <select name="list_id" required>
-                        {% for crafting_list in user_lists %}
-                            <option value="{{ crafting_list.id }}">{{ crafting_list.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="number" name="quantity" value="1" min="1" required>
-                    <button type="submit">Add</button>
-                </form>
-            {% else %}
-                <p>You don't have any lists yet. <a href="{{ url_for('lists.collection') }}">Create one</a>.</p>
-            {% endif %}
-        </section>
-    {% else %}
-        <p><a href="{{ url_for('auth.login_page') }}">Log in</a> to add this item to a crafting list.</p>
-    {% endif %}
-
-    <section class="crafting-tree">
-        <h2>Crafting tree</h2>
-        <ul class="tree-root">
-            {{ render_node(tree) }}
-        </ul>
-    </section>
-
-    <section class="raw-materials">
-        <h2>Raw materials</h2>
-        <label>
-            Quantity to craft:
-            <input
-                type="number"
-                name="quantity"
-                value="{{ quantity }}"
-                min="1"
-                hx-get="{{ url_for('items.requirements', game_id=item.id) }}"
-                hx-trigger="input changed delay:300ms"
-                hx-target="#requirements"
-                hx-swap="innerHTML"
-            >
-        </label>
-        <div id="requirements">
-            {% include "_requirements.html" %}
+    <div class="detail-layout">
+        <div class="detail-col">
+            <section class="crafting-tree">
+                <h2>Crafting tree</h2>
+                <div class="tree-box">
+                    <ul class="tree-root">
+                        {{ render_node(tree) }}
+                    </ul>
+                </div>
+            </section>
         </div>
-    </section>
+
+        <div class="detail-col">
+            <section class="raw-materials">
+                <div class="page-heading-row">
+                    <h2>Raw materials</h2>
+                    <details class="popover-toggle">
+                        <summary class="btn-outline" title="Adjust quantity">&#9776;</summary>
+                        <div class="popover-panel">
+                            <label>
+                                Quantity to craft:
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    value="{{ quantity }}"
+                                    min="1"
+                                    hx-get="{{ url_for('items.requirements', game_id=item.id) }}"
+                                    hx-trigger="input changed delay:300ms"
+                                    hx-target="#requirements"
+                                    hx-swap="innerHTML"
+                                >
+                            </label>
+                            <button type="button" class="btn-outline popover-cancel" onclick="this.closest('details').removeAttribute('open')">Cancel</button>
+                        </div>
+                    </details>
+                </div>
+                <div id="requirements">
+                    {% include "_requirements.html" %}
+                </div>
+            </section>
+        </div>
+    </div>
 {% endblock %}

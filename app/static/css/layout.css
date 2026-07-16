@@ -1,0 +1,124 @@
+/* Page shell: body, typography, header/nav, footer. */
+body {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    background: var(--bg);
+    color: var(--text);
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.25rem 3rem;
+    line-height: 1.6;
+    background-image: radial-gradient(ellipse at top, rgba(201, 162, 77, 0.08), transparent 55%);
+    background-attachment: fixed;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--text);
+}
+
+h1 {
+    font-size: 1.9rem;
+    margin: 0 0 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+h2 {
+    font-size: 1.25rem;
+    margin: 1.75rem 0 0.75rem;
+    color: var(--accent-strong);
+}
+
+a {
+    color: var(--link);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+    padding: 1.25rem 0;
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.nav-search {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 320px;
+    max-width: 420px;
+}
+
+.nav-search input[type="search"] {
+    width: 100%;
+}
+
+.brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: 0.03em;
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.brand:hover {
+    color: var(--accent-strong);
+    text-decoration: none;
+}
+
+.brand-mark {
+    color: var(--accent);
+    font-size: 1.1em;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 0.95rem;
+    margin-left: auto;
+}
+
+.nav-user {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.nav-cta {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--accent-strong);
+}
+
+.nav-cta:hover {
+    background: var(--accent);
+    color: var(--accent-contrast);
+    text-decoration: none;
+}
+
+.site-footer {
+    margin-top: 3rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-soft);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}

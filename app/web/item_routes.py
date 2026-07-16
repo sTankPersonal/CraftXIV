@@ -10,6 +10,8 @@ from app.services.list_service import ListService
 
 
 class ItemViewBase(MethodView):
+    decorators = [login_required]
+
     def __init__(self) -> None:
         data_source = GarlandToolsDataSource.from_app_config(current_app.config)
         self._item_repository = ItemRepository(data_source)
@@ -22,14 +24,12 @@ class ItemDetailView(ItemViewBase):
         tree = self._service.get_tree(game_id)
         requirements = self._service.get_requirements(game_id, quantity=1)
 
-        user_lists = []
-        if current_user.is_authenticated:
-            list_service = ListService(
-                list_repository=ListRepository(),
-                item_repository=self._item_repository,
-                item_service=self._service,
-            )
-            user_lists = list_service.get_lists(current_user.id)
+        list_service = ListService(
+            list_repository=ListRepository(),
+            item_repository=self._item_repository,
+            item_service=self._service,
+        )
+        user_lists = list_service.get_lists(current_user.id)
 
         return render_template(
             "item_detail.html",
@@ -51,8 +51,6 @@ class ItemRequirementsView(ItemViewBase):
 
 
 class ItemAddToListView(ItemViewBase):
-    decorators = [login_required]
-
     def post(self, game_id: int):
         list_id = request.form.get("list_id", type=int)
         quantity = request.form.get("quantity", 1, type=int)
@@ -68,6 +66,9 @@ class ItemAddToListView(ItemViewBase):
         else:
             flash(f"Added {quantity}x {result['item']['name']} to your list.", "success")
 
+        if request.form.get("source") == "search":
+            query = request.form.get("q", "")
+            return redirect(url_for("home.index", q=query) if query else url_for("home.index"))
         return redirect(url_for("items.detail", game_id=game_id))
 
 

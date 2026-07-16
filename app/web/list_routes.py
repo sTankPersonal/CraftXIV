@@ -42,11 +42,13 @@ class ListDetailView(ListViewBase):
         if result is None:
             abort(404)
         requirements = self._service.get_list_requirements(list_id, current_user.id)
+        trees = self._service.get_list_trees(list_id, current_user.id)
         return render_template(
             "list_detail.html",
             crafting_list=result,
             items=result["items"],
             requirements=requirements["requirements"],
+            trees=trees,
         )
 
 

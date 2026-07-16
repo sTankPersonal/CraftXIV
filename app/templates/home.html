@@ -7,6 +7,7 @@
     <input
         type="search"
         name="q"
+        value="{{ query }}"
         placeholder="Search for an item..."
         autofocus
         hx-get="{{ url_for('home.item_search') }}"
@@ -14,5 +15,7 @@
         hx-target="#search-results"
         hx-swap="innerHTML"
     >
-    <div id="search-results"></div>
+    <div id="search-results">
+        {% include "_search_results.html" %}
+    </div>
 {% endblock %}

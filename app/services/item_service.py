@@ -19,7 +19,7 @@ class ItemService:
 
     def get_tree(self, game_id: int) -> dict:
         item = self._repository.get_or_fetch(game_id)
-        return self._build_tree(item, quantity=1)
+        return self.build_tree(item, quantity=1)
 
     def get_requirements(self, game_id: int, quantity: int = 1) -> dict:
         item = self._repository.get_or_fetch(game_id)
@@ -38,12 +38,12 @@ class ItemService:
         for component in item.components:
             self.accumulate_requirements(totals, component.component, quantity * component.quantity)
 
-    def _build_tree(self, item: Item, quantity: int) -> dict:
+    def build_tree(self, item: Item, quantity: int) -> dict:
         return {
             **item.to_dict(),
             "quantity": quantity,
             "children": [
-                self._build_tree(component.component, component.quantity)
+                self.build_tree(component.component, component.quantity)
                 for component in item.components
             ],
         }

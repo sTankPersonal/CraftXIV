@@ -78,3 +78,12 @@ class ListService:
         for list_item in crafting_list.items:
             self._item_service.accumulate_requirements(totals, list_item.item, list_item.quantity)
         return {"requirements": list(totals.values())}
+
+    def get_list_trees(self, list_id: int, user_id: int) -> list[dict] | None:
+        crafting_list = self._list_repository.get_list(list_id, user_id)
+        if crafting_list is None:
+            return None
+        return [
+            self._item_service.build_tree(list_item.item, list_item.quantity)
+            for list_item in crafting_list.items
+        ]
