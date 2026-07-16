@@ -7,7 +7,7 @@ def test_cache_miss_fetches_full_tree_and_persists(app, fake_data_source):
     item = repository.get_or_fetch(1)
 
     assert item.name == "Widget"
-    assert item.acquisition_type == "craft"
+    assert item.is_leaf() is False
     assert sorted(fake_data_source.fetch_calls) == [1, 2, 3]
 
     component_ids = {component.component.game_id: component.quantity for component in item.components}

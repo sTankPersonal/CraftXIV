@@ -269,3 +269,57 @@ div.popover-panel .inline-form {
     text-align: center;
     color: var(--text-muted);
 }
+
+.acquisition-popover {
+    position: relative;
+    display: inline-block;
+}
+
+.acquisition-badge {
+    cursor: pointer;
+    list-style: none;
+    color: var(--text-muted);
+    font-size: 0.85em;
+    font-style: italic;
+    border-bottom: 1px dotted var(--text-muted);
+}
+
+.acquisition-badge::-webkit-details-marker {
+    display: none;
+}
+
+.acquisition-popover[open] .acquisition-badge {
+    color: var(--accent-strong);
+    border-bottom-color: var(--accent-strong);
+}
+
+.acquisition-panel {
+    min-width: 220px;
+    max-width: 320px;
+    font-size: 0.85rem;
+    font-style: normal;
+}
+
+.acquisition-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.acquisition-list li {
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 0.4rem;
+}
+
+.acquisition-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.acquisition-empty {
+    color: var(--text-muted);
+    margin: 0;
+}

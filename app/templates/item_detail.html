@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_tree.html" import render_node %}
+{% from "_acquisitions.html" import acquisition_badge %}
 
 {% block title %}{{ item.name }} - CraftXIV{% endblock %}
 
@@ -29,9 +30,8 @@
 
     <h2>Metadata</h2>
     <dl class="item-meta">
-        <dt>Type</dt><dd>{{ item.acquisition_type }}</dd>
+        <dt>Type</dt><dd>{{ acquisition_badge(item) }}</dd>
         {% if item.ilvl %}<dt>Item level</dt><dd>{{ item.ilvl }}</dd>{% endif %}
-        {% if item.vendor_price %}<dt>Vendor price</dt><dd>{{ item.vendor_price }} gil</dd>{% endif %}
     </dl>
 
     <div class="detail-layout">

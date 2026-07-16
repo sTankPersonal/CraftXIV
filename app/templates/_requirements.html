@@ -1,3 +1,5 @@
+{% from "_acquisitions.html" import acquisition_badge %}
+
 {% if requirements %}
     <table class="requirements-table">
         <thead>
@@ -7,7 +9,7 @@
             {% for req in requirements %}
                 <tr>
                     <td><a href="{{ url_for('items.detail', game_id=req.id) }}">{{ req.name }}</a></td>
-                    <td>{{ req.acquisition_type }}</td>
+                    <td>{{ acquisition_badge(req) }}</td>
                     <td>{{ req.quantity }}</td>
                 </tr>
             {% endfor %}

@@ -1,0 +1,25 @@
+{% macro acquisition_badge(node) %}
+    <details class="acquisition-popover">
+        <summary class="acquisition-badge">{{ node.acquisition_types | join(', ') }}</summary>
+        <div class="popover-panel acquisition-panel">
+            {% if node.acquisitions %}
+                <ul class="acquisition-list">
+                    {% for acquisition in node.acquisitions %}
+                        <li>
+                            <strong>{{ acquisition.location_name or "Unknown location" }}</strong>
+                            {% if acquisition.acquisition_type == "vendor" %}
+                                {% if acquisition.price %}<br>{{ acquisition.price }} gil{% endif %}
+                            {% elif acquisition.acquisition_type == "gather" %}
+                                {% if acquisition.limit_type %}<br>{{ acquisition.limit_type }}{% endif %}
+                                {% if acquisition.time_windows %}<br>Up at hour(s) {{ acquisition.time_windows | join(', ') }}{% endif %}
+                                {% if acquisition.uptime_minutes %} for {{ acquisition.uptime_minutes }}m{% endif %}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="acquisition-empty">Crafted from components.</p>
+            {% endif %}
+        </div>
+    </details>
+{% endmacro %}

@@ -7,6 +7,7 @@ import pytest
 from app.config import TestConfig
 from app.datasources.base import ItemDataSource
 from app.datasources.ingredient_ref import IngredientRef
+from app.datasources.parsed_acquisition import ParsedAcquisition
 from app.datasources.parsed_item import ParsedItem
 from app.datasources.search_result import SearchResult
 from app.extensions import db
@@ -61,7 +62,6 @@ def fake_data_source():
                 icon_id=None,
                 ilvl=1,
                 category=1,
-                acquisition_type=AcquisitionType.CRAFT,
                 ingredients=[
                     IngredientRef(game_id=2, amount=3),
                     IngredientRef(game_id=3, amount=1),
@@ -73,8 +73,13 @@ def fake_data_source():
                 icon_id=None,
                 ilvl=1,
                 category=1,
-                acquisition_type=AcquisitionType.GATHER,
-                gathering_node_ids=[100],
+                acquisitions=[
+                    ParsedAcquisition(
+                        acquisition_type=AcquisitionType.GATHER,
+                        location_name="Dragonhead",
+                        node_id=100,
+                    )
+                ],
             ),
             3: ParsedItem(
                 game_id=3,
@@ -82,8 +87,14 @@ def fake_data_source():
                 icon_id=None,
                 ilvl=1,
                 category=1,
-                acquisition_type=AcquisitionType.VENDOR,
-                vendor_price=50,
+                acquisitions=[
+                    ParsedAcquisition(
+                        acquisition_type=AcquisitionType.VENDOR,
+                        location_name="Jossy",
+                        npc_id=200,
+                        price=50,
+                    )
+                ],
             ),
         }
     )

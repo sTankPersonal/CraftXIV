@@ -5,6 +5,7 @@ from app.datasources.search_result import SearchResult
 from app.extensions import db
 from app.models.acquisition_type import AcquisitionType
 from app.models.item import Item
+from app.models.item_acquisition import ItemAcquisition
 from app.models.item_component import ItemComponent
 
 
@@ -40,15 +41,32 @@ class ItemRepository:
             icon_id=parsed.icon_id,
             ilvl=parsed.ilvl,
             category=parsed.category,
-            acquisition_type=parsed.acquisition_type.value
-            if isinstance(parsed.acquisition_type, AcquisitionType)
-            else parsed.acquisition_type,
-            vendor_price=parsed.vendor_price,
-            gathering_node_ids=parsed.gathering_node_ids,
             raw_payload=parsed.raw_payload,
         )
         self._session.add(item)
         self._session.flush()
+
+        for acquisition in parsed.acquisitions:
+            self._session.add(
+                ItemAcquisition(
+                    item_id=item.id,
+                    acquisition_type=acquisition.acquisition_type.value
+                    if isinstance(acquisition.acquisition_type, AcquisitionType)
+                    else acquisition.acquisition_type,
+                    location_name=acquisition.location_name,
+                    zone_id=acquisition.zone_id,
+                    coords_x=acquisition.coords_x,
+                    coords_y=acquisition.coords_y,
+                    node_id=acquisition.node_id,
+                    gathering_type=acquisition.gathering_type,
+                    stars=acquisition.stars,
+                    limit_type=acquisition.limit_type,
+                    time_windows=acquisition.time_windows,
+                    uptime_minutes=acquisition.uptime_minutes,
+                    npc_id=acquisition.npc_id,
+                    price=acquisition.price,
+                )
+            )
 
         for ingredient in parsed.ingredients:
             component_item = self.get_or_fetch(ingredient.game_id, visiting)
