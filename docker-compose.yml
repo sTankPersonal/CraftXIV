@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-craftxiv}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-craftxiv}
+      POSTGRES_DB: ${POSTGRES_DB:-craftxiv}
+    volumes:
+      - craftxiv_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-craftxiv}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-craftxiv}:${POSTGRES_PASSWORD:-craftxiv}@db:5432/${POSTGRES_DB:-craftxiv}
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  craftxiv_pgdata:
