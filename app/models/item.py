@@ -31,9 +31,12 @@ class Item(db.Model):
     )
 
     def is_leaf(self) -> bool:
-        """An item is a leaf (a raw material to buy/gather rather than craft) if it has no
-        recipe, or if it has a recipe but can *also* be gathered or bought directly."""
-        return not self.components or bool(self.acquisitions)
+        """An item is a leaf (a raw material, not something to keep decomposing) only when it
+        has no recipe of its own. An item that *can* be crafted still decomposes into its own
+        components by default even if it can *also* be bought/gathered/desynthed directly -
+        callers that want to stop at such an item instead (buy it rather than craft it) do so
+        explicitly via an override, not because a purchase option happens to exist."""
+        return not self.components
 
     def acquisition_types(self) -> list[str]:
         """All the ways this item can be obtained - not just one. An item can be both craftable

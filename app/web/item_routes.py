@@ -44,7 +44,8 @@ class ItemDetailView(ItemViewBase):
 class ItemRequirementsView(ItemViewBase):
     def get(self, game_id: int):
         quantity = request.args.get("quantity", 1, type=int)
-        requirements = self._service.get_requirements(game_id, quantity)
+        buy_ids = set(request.args.getlist("buy", type=int))
+        requirements = self._service.get_requirements(game_id, quantity, buy_ids)
         return render_template(
             "_requirements.html", requirements=requirements["requirements"], quantity=quantity
         )

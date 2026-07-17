@@ -1,14 +1,28 @@
 {% from "_acquisitions.html" import acquisition_badge %}
 
-{% macro render_node(node) %}
+{% macro render_node(node, requirements_url=None) %}
     <li class="tree-node">
         <a href="{{ url_for('items.detail', game_id=node.id) }}">{{ node.name }}</a>
         <span class="tree-qty">x{{ node.quantity }}</span>
         <span class="tree-type">{{ acquisition_badge(node) }}</span>
+        {% if requirements_url and "craft" in node.acquisition_types and node.acquisition_types | length > 1 %}
+            <label class="tree-buy-toggle">
+                <input
+                    type="checkbox"
+                    name="buy"
+                    value="{{ node.id }}"
+                    hx-get="{{ requirements_url }}"
+                    hx-trigger="change"
+                    hx-target="#requirements"
+                    hx-include="#craft-quantity,[name='buy']"
+                >
+                Buy/gather instead
+            </label>
+        {% endif %}
         {% if node.children %}
             <ul class="tree-children">
                 {% for child in node.children %}
-                    {{ render_node(child) }}
+                    {{ render_node(child, requirements_url) }}
                 {% endfor %}
             </ul>
         {% endif %}

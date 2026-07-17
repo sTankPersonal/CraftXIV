@@ -39,7 +39,7 @@
                 <h2>Crafting tree</h2>
                 <div class="tree-box">
                     <ul class="tree-root">
-                        {{ render_node(tree) }}
+                        {{ render_node(tree, url_for('items.requirements', game_id=item.id)) }}
                     </ul>
                 </div>
             </section>
@@ -57,11 +57,13 @@
                                 <input
                                     type="number"
                                     name="quantity"
+                                    id="craft-quantity"
                                     value="{{ quantity }}"
                                     min="1"
                                     hx-get="{{ url_for('items.requirements', game_id=item.id) }}"
                                     hx-trigger="input changed delay:300ms"
                                     hx-target="#requirements"
+                                    hx-include="[name='buy']"
                                     hx-swap="innerHTML"
                                 >
                             </label>
