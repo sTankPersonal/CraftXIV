@@ -1,25 +1,35 @@
 {% macro acquisition_badge(node) %}
-    <details class="acquisition-popover">
-        <summary class="acquisition-badge">{{ node.acquisition_types | join(', ') }}</summary>
-        <div class="popover-panel acquisition-panel">
-            {% if node.acquisitions %}
-                <ul class="acquisition-list">
-                    {% for acquisition in node.acquisitions %}
-                        <li>
-                            <strong>{{ acquisition.location_name or "Unknown location" }}</strong>
-                            {% if acquisition.acquisition_type == "vendor" %}
-                                {% if acquisition.price %}<br>{{ acquisition.price }} gil{% endif %}
-                            {% elif acquisition.acquisition_type == "gather" %}
-                                {% if acquisition.limit_type %}<br>{{ acquisition.limit_type }}{% endif %}
-                                {% if acquisition.time_windows %}<br>Up at hour(s) {{ acquisition.time_windows | join(', ') }}{% endif %}
-                                {% if acquisition.uptime_minutes %} for {{ acquisition.uptime_minutes }}m{% endif %}
+    {% for acquisition_type in node.acquisition_types %}
+        {% if not loop.first %}<span class="acquisition-sep">, </span>{% endif %}
+        {% set type_acquisitions = node.acquisitions | selectattr("acquisition_type", "equalto", acquisition_type) | list %}
+        {% set is_timed_type = type_acquisitions and (type_acquisitions | rejectattr("is_timed") | list | length == 0) %}
+        <details class="acquisition-popover">
+            <summary class="acquisition-badge">{{ "timed " ~ acquisition_type if is_timed_type else acquisition_type }}</summary>
+            <div class="popover-panel acquisition-panel">
+                {% if acquisition_type == "unknown" %}
+                    <p class="acquisition-empty">No known acquisition data.</p>
+                {% else %}
+                    <div class="acquisition-scroll">
+                        <ul class="acquisition-list">
+                            {% if acquisition_type == "craft" %}
+                                <li><strong>Crafted from components</strong></li>
                             {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="acquisition-empty">Crafted from components.</p>
-            {% endif %}
-        </div>
-    </details>
+                            {% for acquisition in node.acquisitions if acquisition.acquisition_type == acquisition_type %}
+                                <li>
+                                    <strong>{{ acquisition.zone_name or acquisition.location_name or acquisition.acquisition_type }}</strong>
+                                    {% if acquisition.zone_name and acquisition.location_name and acquisition.location_name != acquisition.zone_name %}
+                                        <br><span class="acquisition-subloc">{{ acquisition.location_name }}</span>
+                                    {% endif %}
+                                    {% if acquisition.coords %}
+                                        <br><span class="acquisition-coords">X: {{ "%.1f"|format(acquisition.coords[0]) }}, Y: {{ "%.1f"|format(acquisition.coords[1]) }}</span>
+                                    {% endif %}
+                                    {% for line in acquisition.detail_lines %}<br>{{ line }}{% endfor %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </details>
+    {% endfor %}
 {% endmacro %}

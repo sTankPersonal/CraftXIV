@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, current_app, flash, redirect, render_template, url_for
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, session, url_for
 from flask.views import MethodView
 from flask_login import login_required, login_user, logout_user
 
@@ -42,6 +42,7 @@ class CallbackView(MethodView):
             profile = self._extract_github_profile(client, token)
 
         user = self._auth_service.login_or_register(provider=provider, **profile)
+        session.permanent = True
         login_user(user)
         flash(f"Welcome, {user.display_name}.", "success")
         return redirect(url_for("home.index"))
@@ -51,25 +52,15 @@ class CallbackView(MethodView):
         userinfo = token.get("userinfo") or client.parse_id_token(token)
         return {
             "provider_user_id": userinfo["sub"],
-            "email": userinfo.get("email"),
             "display_name": userinfo.get("name") or userinfo.get("email") or "Google User",
-            "avatar_url": userinfo.get("picture"),
         }
 
     @staticmethod
     def _extract_github_profile(client, token: dict) -> dict:
         profile = client.get(current_app.config["GITHUB_USER_PATH"], token=token).json()
-        email = profile.get("email")
-        if not email:
-            emails = client.get(current_app.config["GITHUB_USER_EMAILS_PATH"], token=token).json()
-            primary = next((entry for entry in emails if entry.get("primary")), None)
-            email = primary["email"] if primary else None
-
         return {
             "provider_user_id": str(profile["id"]),
-            "email": email,
-            "display_name": profile.get("name") or profile.get("login"),
-            "avatar_url": profile.get("avatar_url"),
+            "display_name": profile.get("name") or profile.get("login") or "GitHub User",
         }
 
 

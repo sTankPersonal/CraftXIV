@@ -1,12 +1,12 @@
 {% from "_acquisitions.html" import acquisition_badge %}
 
 {% macro render_node(node) %}
-    <li>
+    <li class="tree-node">
         <a href="{{ url_for('items.detail', game_id=node.id) }}">{{ node.name }}</a>
         <span class="tree-qty">x{{ node.quantity }}</span>
         <span class="tree-type">{{ acquisition_badge(node) }}</span>
         {% if node.children %}
-            <ul>
+            <ul class="tree-children">
                 {% for child in node.children %}
                     {{ render_node(child) }}
                 {% endfor %}

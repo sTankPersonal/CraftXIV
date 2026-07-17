@@ -23,7 +23,6 @@
                 {% else %}
                     <p>You don't have any lists yet. <a href="{{ url_for('lists.collection') }}">Create one</a>.</p>
                 {% endif %}
-                <button type="button" class="btn-outline popover-cancel" onclick="this.closest('details').removeAttribute('open')">Cancel</button>
             </div>
         </details>
     </div>
@@ -66,7 +65,6 @@
                                     hx-swap="innerHTML"
                                 >
                             </label>
-                            <button type="button" class="btn-outline popover-cancel" onclick="this.closest('details').removeAttribute('open')">Cancel</button>
                         </div>
                     </details>
                 </div>

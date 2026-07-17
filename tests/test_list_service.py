@@ -7,7 +7,7 @@ from app.services.list_service import ListService
 
 
 def _make_user() -> User:
-    user = User(provider="google", provider_user_id="abc123", email="a@b.com", display_name="Tester")
+    user = User(provider="google", provider_user_id="abc123", display_name="Tester")
     db.session.add(user)
     db.session.commit()
     return user
@@ -35,7 +35,7 @@ def test_create_and_get_list(app, fake_data_source):
 
 def test_get_list_scoped_to_owner(app, fake_data_source):
     owner = _make_user()
-    other_user = User(provider="github", provider_user_id="xyz", email=None, display_name="Other")
+    other_user = User(provider="github", provider_user_id="xyz", display_name="Other")
     db.session.add(other_user)
     db.session.commit()
     service = _service(fake_data_source)

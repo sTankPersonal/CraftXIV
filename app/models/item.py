@@ -36,10 +36,13 @@ class Item(db.Model):
         return not self.components or bool(self.acquisitions)
 
     def acquisition_types(self) -> list[str]:
-        types = sorted({acquisition.acquisition_type for acquisition in self.acquisitions})
-        if types:
-            return types
-        return [AcquisitionType.CRAFT.value] if self.components else [AcquisitionType.UNKNOWN.value]
+        """All the ways this item can be obtained - not just one. An item can be both craftable
+        *and* buyable/gatherable/etc, and callers need to see every option, not just the first
+        one found."""
+        types = {acquisition.acquisition_type for acquisition in self.acquisitions}
+        if self.components:
+            types.add(AcquisitionType.CRAFT.value)
+        return sorted(types) if types else [AcquisitionType.UNKNOWN.value]
 
     def to_dict(self) -> dict:
         return {

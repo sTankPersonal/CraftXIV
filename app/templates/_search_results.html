@@ -4,7 +4,7 @@
     <ul class="search-results-list">
         {% for result in results %}
             <li class="search-result-row">
-                <span class="search-result-name">{{ result.name }}</span>
+                <a class="search-result-name" href="{{ url_for('items.detail', game_id=result.id) }}">{{ result.name }}</a>
                 <div class="search-result-actions">
                     <details class="popover-toggle">
                         <summary class="btn-outline" title="Actions">&#9776;</summary>
@@ -25,7 +25,6 @@
                             {% else %}
                                 <a class="btn-outline" href="{{ url_for('lists.collection') }}">Create a list</a>
                             {% endif %}
-                            <button type="button" class="btn-outline popover-cancel" onclick="this.closest('details').removeAttribute('open')">Cancel</button>
                         </div>
                     </details>
                 </div>

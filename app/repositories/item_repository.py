@@ -55,16 +55,11 @@ class ItemRepository:
                     else acquisition.acquisition_type,
                     location_name=acquisition.location_name,
                     zone_id=acquisition.zone_id,
+                    zone_name=acquisition.zone_name,
                     coords_x=acquisition.coords_x,
                     coords_y=acquisition.coords_y,
-                    node_id=acquisition.node_id,
-                    gathering_type=acquisition.gathering_type,
-                    stars=acquisition.stars,
-                    limit_type=acquisition.limit_type,
-                    time_windows=acquisition.time_windows,
-                    uptime_minutes=acquisition.uptime_minutes,
-                    npc_id=acquisition.npc_id,
-                    price=acquisition.price,
+                    ref_id=acquisition.ref_id,
+                    details=acquisition.details or None,
                 )
             )
 

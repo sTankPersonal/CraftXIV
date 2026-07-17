@@ -77,7 +77,7 @@ def fake_data_source():
                     ParsedAcquisition(
                         acquisition_type=AcquisitionType.GATHER,
                         location_name="Dragonhead",
-                        node_id=100,
+                        ref_id=100,
                     )
                 ],
             ),
@@ -91,8 +91,8 @@ def fake_data_source():
                     ParsedAcquisition(
                         acquisition_type=AcquisitionType.VENDOR,
                         location_name="Jossy",
-                        npc_id=200,
-                        price=50,
+                        ref_id=200,
+                        details={"price": 50},
                     )
                 ],
             ),

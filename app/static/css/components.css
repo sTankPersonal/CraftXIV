@@ -61,7 +61,7 @@ tbody tr:hover {
     box-shadow: var(--shadow);
 }
 
-.tree-root, .tree-root ul {
+.tree-root, .tree-children {
     list-style: none;
     padding-left: 1.25rem;
     margin: 0.2rem 0;
@@ -71,18 +71,18 @@ tbody tr:hover {
     padding-left: 0;
 }
 
-.tree-root li {
+.tree-node {
     position: relative;
     padding: 0.15rem 0 0.15rem 0.9rem;
     border-left: 1px solid var(--border);
 }
 
-.tree-root > li {
+.tree-root > .tree-node {
     border-left: none;
     padding-left: 0;
 }
 
-.tree-root li::before {
+.tree-node::before {
     content: "";
     position: absolute;
     left: -1px;
@@ -91,7 +91,7 @@ tbody tr:hover {
     border-top: 1px solid var(--border);
 }
 
-.tree-root > li::before {
+.tree-root > .tree-node::before {
     display: none;
 }
 
@@ -132,6 +132,26 @@ tbody tr:hover {
     margin: 0;
 }
 
+.login-note {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow);
+    max-width: 480px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.login-note p {
+    margin: 0;
+}
+
+.login-note p + p {
+    margin-top: 0.6rem;
+}
+
 .provider-list {
     list-style: none;
     padding: 0;
@@ -155,7 +175,7 @@ tbody tr:hover {
     box-shadow: var(--shadow);
 }
 
-.items-table {
+.items-table, .requirements-table {
     overflow: visible;
 }
 
@@ -264,12 +284,6 @@ div.popover-panel .inline-form {
     margin: 0;
 }
 
-.popover-cancel {
-    align-self: stretch;
-    text-align: center;
-    color: var(--text-muted);
-}
-
 .acquisition-popover {
     position: relative;
     display: inline-block;
@@ -295,9 +309,24 @@ div.popover-panel .inline-form {
 
 .acquisition-panel {
     min-width: 220px;
-    max-width: 320px;
+    max-width: 360px;
     font-size: 0.85rem;
     font-style: normal;
+}
+
+.acquisition-scroll {
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.acquisition-sep {
+    color: var(--text-muted);
+    font-size: 0.85em;
+}
+
+.acquisition-subloc,
+.acquisition-coords {
+    color: var(--text-muted);
 }
 
 .acquisition-list {

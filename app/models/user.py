@@ -14,9 +14,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     provider = db.Column(db.String(20), nullable=False)
     provider_user_id = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=True)
     display_name = db.Column(db.String(255), nullable=False)
-    avatar_url = db.Column(db.String(1024), nullable=True)
     created_at = db.Column(
         db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
     )
@@ -25,5 +23,4 @@ class User(db.Model, UserMixin):
         return {
             "id": self.id,
             "display_name": self.display_name,
-            "avatar_url": self.avatar_url,
         }

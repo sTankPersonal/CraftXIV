@@ -4,6 +4,17 @@
 
 {% block content %}
     <h1>Log in</h1>
+    <div class="login-note">
+        <p>
+            Logging in lets CraftXIV save your crafting lists to your account so they're there
+            next time you visit - that's the only reason an account is required.
+        </p>
+        <p>
+            We store just your OAuth provider, its account ID, and the display name it gives us
+            (refreshed each time you log in). No email address or any other identifying information is kept. You'll
+            be asked to log in again after 7 days.
+        </p>
+    </div>
     <ul class="provider-list">
         {% for provider in providers %}
             <li>
